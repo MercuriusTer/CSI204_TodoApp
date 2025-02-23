@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List App Naja Eiei</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .todo-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+
+        input {
+            width: 70%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            background: #fff;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .delete {
+            background: #dc3545;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .delete:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>To-Do List Web App</h1>
+    <div class="todo-container">
+        <input type="text" id="taskInput" placeholder="เพิ่มงาน...">
+        <button onclick="addTask()">เพิ่ม</button>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", loadTasks);
+
+        function addTask() {
+            let taskInput = document.getElementById("taskInput");
+            let taskText = taskInput.value.trim();
+
+            if (taskText === "") {
+                alert("กรุณาใส่รายการงาน!");
+                return;
+            }
+
+            let taskList = document.getElementById("taskList");
+
+            let li = document.createElement("li");
+            li.innerHTML = `${taskText} <button class="delete" onclick="deleteTask(this)">❌</button>`;
+            taskList.appendChild(li);
+
+            saveTasks();
+            taskInput.value = "";
+        }
+
+        function deleteTask(button) {
+            button.parentElement.remove();
+            saveTasks();
+        }
+
+        function saveTasks() {
+            let tasks = [];
+            document.querySelectorAll("#taskList li").forEach(li => {
+                tasks.push(li.firstChild.textContent);
+            });
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+
+        function loadTasks() {
+            let savedTasks = JSON.parse(localStorage.getItem("tasks"));
+            if (savedTasks) {
+                let taskList = document.getElementById("taskList");
+                savedTasks.forEach(taskText => {
+                    let li = document.createElement("li");
+                    li.innerHTML = `${taskText} <button class="delete" onclick="deleteTask(this)">X</button>`;
+                    taskList.appendChild(li);
+                });
+            }
+        }
+    </script>
+
+</body>
+
+</html>
